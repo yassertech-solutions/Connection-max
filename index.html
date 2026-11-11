@@ -1,0 +1,723 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b0a">
+<title>CONNECTION TZ | Modern Streaming</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+ --bg:#090b0a;
+ --panel:#121613;
+ --panel2:#1a211c;
+ --red:#e53945;
+ --red2:#a7192b;
+ --green:#16a36b;
+ --text:#f5f7f5;
+ --muted:#89928b;
+ --line:rgba(255,255,255,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+ background:var(--bg);
+ color:var(--text);
+ font-family:'DM Sans',sans-serif;
+ padding-bottom:90px;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* WELCOME */
+#welcome{
+ position:fixed;inset:0;z-index:1000;
+ background:radial-gradient(ellipse at 50% 20%,#32151a 0%,#090b0a 60%);
+ display:flex;align-items:center;justify-content:center;
+ padding:25px;
+}
+.welcome-content{width:100%;max-width:390px;text-align:center}
+.welcome-logo{
+ width:112px;height:112px;object-fit:cover;
+ border-radius:50%;border:2px solid var(--red);
+ padding:4px;margin-bottom:23px;
+ box-shadow:0 0 45px #e5394530;
+}
+.welcome-content h1{
+ font-family:'Playfair Display',serif;
+ font-size:34px;letter-spacing:1px;
+}
+.welcome-content h1 span{color:var(--red)}
+.welcome-content .tagline{
+ color:var(--muted);font-size:13px;
+ line-height:1.8;margin:12px 0 28px;
+}
+.welcome-content input{
+ width:100%;padding:16px;border-radius:13px;
+ border:1px solid var(--line);
+ background:var(--panel);color:white;
+ outline:none;margin-bottom:12px;
+}
+.main-btn{
+ width:100%;border:0;border-radius:13px;
+ padding:16px;color:white;font-weight:800;
+ background:linear-gradient(110deg,var(--red),var(--red2));
+}
+.powered{color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:22px}
+
+/* HEADER */
+.topbar{
+ position:sticky;top:0;z-index:50;
+ background:#090b0af0;backdrop-filter:blur(18px);
+ border-bottom:1px solid var(--line);
+}
+.top-inner{
+ max-width:1200px;margin:auto;padding:13px 18px;
+ display:flex;justify-content:space-between;align-items:center;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{
+ width:42px;height:42px;object-fit:cover;
+ border-radius:50%;border:1px solid var(--red);
+}
+.brand h2{font-family:'Playfair Display',serif;font-size:18px}
+.brand h2 span{color:var(--red)}
+.brand small{display:block;color:var(--muted);font-size:8px;letter-spacing:2px}
+.actions{display:flex;gap:8px}
+.action{
+ width:40px;height:40px;border-radius:12px;
+ background:var(--panel);color:white;
+ border:1px solid var(--line);font-size:17px;
+ position:relative;
+}
+.notification-dot{
+ width:7px;height:7px;border-radius:50%;
+ background:var(--red);position:absolute;right:7px;top:7px;
+}
+
+/* LAYOUT */
+main{max-width:1200px;margin:auto;padding:18px}
+.greeting{
+ display:flex;justify-content:space-between;
+ align-items:center;margin:5px 0 20px;
+}
+.greeting p{font-size:12px;color:var(--muted)}
+.greeting strong{font-size:15px}
+#clock{font-size:11px;color:var(--green)}
+
+/* FEATURE */
+.feature{
+ min-height:310px;border-radius:22px;overflow:hidden;
+ position:relative;display:flex;align-items:flex-end;
+ background:#1a211c;
+ border:1px solid var(--line);
+}
+.feature-image{
+ position:absolute;inset:0;width:100%;height:100%;
+ object-fit:cover;opacity:.65;
+}
+.feature-overlay{
+ position:absolute;inset:0;
+ background:linear-gradient(0deg,#090b0a 0%,rgba(9,11,10,.3) 65%,transparent);
+}
+.feature-content{position:relative;z-index:2;padding:22px;width:100%}
+.feature-label{
+ display:inline-block;padding:7px 11px;
+ background:var(--red);border-radius:6px;
+ font-size:9px;letter-spacing:1.5px;font-weight:800;
+}
+.feature-content h1{
+ font-family:'Playfair Display',serif;
+ font-size:clamp(27px,6vw,42px);
+ margin:12px 0 7px;
+}
+.feature-content p{
+ font-size:12px;color:#d0d4d0;
+ line-height:1.6;max-width:430px;
+}
+.feature-buttons{display:flex;gap:10px;margin-top:17px}
+.watch-btn,.more-btn{
+ padding:12px 17px;border:0;border-radius:9px;
+ font-size:11px;font-weight:800;
+}
+.watch-btn{background:white;color:#111}
+.more-btn{background:#ffffff20;color:white;border:1px solid #ffffff35}
+
+/* SEARCH */
+.search{
+ display:flex;align-items:center;gap:10px;
+ background:var(--panel);border:1px solid var(--line);
+ border-radius:13px;padding:0 15px;height:49px;
+ margin-top:22px;
+}
+.search span{font-size:19px;color:var(--muted)}
+.search input{
+ background:transparent;border:0;outline:none;
+ color:white;width:100%;font-size:13px;
+}
+
+/* SECTION */
+.section{margin-top:30px}
+.section-title{
+ display:flex;align-items:center;justify-content:space-between;
+ margin-bottom:15px;
+}
+.section-title h2{font-size:17px;font-weight:800}
+.section-title h2 span{color:var(--red)}
+.section-title button{
+ background:transparent;border:0;color:var(--green);
+ font-size:11px;font-weight:700;
+}
+
+/* CATEGORY */
+.category-row{
+ display:flex;gap:9px;overflow-x:auto;
+ scrollbar-width:none;padding-bottom:4px;
+}
+.category-row::-webkit-scrollbar{display:none}
+.cat{
+ white-space:nowrap;padding:10px 16px;
+ border:1px solid var(--line);border-radius:30px;
+ background:var(--panel);color:#c2c9c3;
+ font-size:11px;font-weight:700;
+}
+.cat.active{background:var(--red);border-color:var(--red);color:white}
+
+/* VIDEO GRID */
+.video-grid{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:15px;
+}
+.video-card{
+ min-width:0;overflow:hidden;border-radius:14px;
+ background:var(--panel);border:1px solid var(--line);
+ cursor:pointer;transition:.2s;
+}
+.video-card:active{transform:scale(.97)}
+.poster{height:175px;position:relative;background:var(--panel2)}
+.poster img{width:100%;height:100%;object-fit:cover;display:block}
+.poster:after{
+ content:"▶";position:absolute;left:50%;top:50%;
+ transform:translate(-50%,-50%);
+ width:42px;height:42px;border-radius:50%;
+ display:grid;place-items:center;padding-left:3px;
+ background:#e53945e8;color:white;font-size:13px;
+}
+.video-info{padding:11px}
+.video-info h3{
+ font-size:12px;line-height:1.5;margin-bottom:6px;
+ display:-webkit-box;-webkit-line-clamp:2;
+ -webkit-box-orient:vertical;overflow:hidden;
+}
+.video-info p{font-size:9px;color:var(--muted)}
+.no-videos{
+ grid-column:1/-1;padding:40px 15px;
+ text-align:center;border:1px dashed var(--line);
+ border-radius:15px;color:var(--muted);font-size:12px;
+}
+.no-videos strong{display:block;color:white;margin-bottom:7px}
+
+/* PREMIUM */
+.premium-card{
+ position:relative;overflow:hidden;
+ padding:23px;border-radius:19px;
+ background:linear-gradient(115deg,#33151c,#14231a);
+ border:1px solid #e5394540;
+}
+.premium-card:after{
+ content:"PREMIUM";position:absolute;
+ right:-10px;bottom:-17px;
+ font-size:52px;font-weight:800;
+ color:#ffffff08;
+}
+.premium-card small{color:#e7a1a5;letter-spacing:2px;font-size:9px}
+.premium-card h2{
+ font-family:'Playfair Display',serif;
+ font-size:23px;margin:9px 0;
+}
+.premium-card p{color:#c4c9c4;font-size:11px;line-height:1.7}
+.premium-card button{
+ margin-top:16px;padding:12px 17px;
+ border:0;border-radius:9px;background:var(--red);
+ color:white;font-size:11px;font-weight:800;
+}
+
+/* BOTTOM NAV */
+.bottom-nav{
+ position:fixed;bottom:0;left:0;right:0;z-index:60;
+ background:#101511f5;backdrop-filter:blur(20px);
+ border-top:1px solid var(--line);
+ display:flex;justify-content:space-around;
+ padding:10px 7px calc(10px + env(safe-area-inset-bottom));
+}
+.nav-item{
+ border:0;background:transparent;color:var(--muted);
+ display:flex;flex-direction:column;align-items:center;
+ gap:4px;font-size:9px;min-width:55px;
+}
+.nav-item span{font-size:19px}
+.nav-item.active{color:var(--red)}
+.nav-item.active span{filter:drop-shadow(0 0 7px #e5394560)}
+
+/* FOOTER */
+footer{
+ text-align:center;border-top:1px solid var(--line);
+ padding:25px 15px;color:var(--muted);
+ font-size:10px;line-height:2;margin-top:35px;
+}
+footer strong{color:white}
+
+/* MODALS */
+.modal{
+ display:none;position:fixed;inset:0;z-index:100;
+ background:#000d;align-items:center;justify-content:center;padding:15px;
+}
+.modal.show{display:flex}
+.modal-box{
+ width:100%;max-width:540px;max-height:90vh;overflow:auto;
+ background:#121713;border:1px solid var(--line);
+ border-radius:18px;padding:18px;
+}
+.modal-head{
+ display:flex;justify-content:space-between;
+ align-items:center;margin-bottom:17px;
+}
+.modal-head h3{font-size:15px}
+.close{
+ width:34px;height:34px;border:0;
+ border-radius:9px;background:var(--panel2);
+ color:white;font-size:19px;
+}
+#player{width:100%;max-height:65vh;background:black;border-radius:12px}
+#playerTitle{font-size:14px;margin-top:12px}
+.notice{padding:14px 0;border-bottom:1px solid var(--line)}
+.notice strong{font-size:13px}
+.notice p{font-size:11px;color:var(--muted);margin-top:5px}
+.account-profile{display:flex;align-items:center;gap:13px;margin-bottom:18px}
+.account-profile img{width:55px;height:55px;border-radius:50%;object-fit:cover;border:1px solid var(--red)}
+.account-profile p{color:var(--muted);font-size:10px;margin-top:5px}
+.modal-btn{
+ width:100%;padding:13px;margin-top:9px;
+ border-radius:10px;border:1px solid var(--line);
+ background:var(--panel2);color:white;font-size:12px;
+}
+
+/* RESPONSIVE */
+@media(max-width:760px){
+ .video-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .poster{height:155px}
+ .feature{min-height:285px}
+}
+@media(max-width:380px){
+ main{padding:14px}
+ .poster{height:125px}
+ .feature{min-height:255px}
+ .brand h2{font-size:16px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- WELCOME -->
+<div id="welcome">
+ <div class="welcome-content">
+  <img class="welcome-logo" src="https://files.catbox.moe/1b3ecf" alt="CONNECTION TZ">
+  <h1>CONNECTION <span>TZ</span></h1>
+  <p class="tagline">Your Entertainment. Your World.<br>Karibu kwenye ulimwengu wa burudani.</p>
+  <input id="visitorName" type="text" maxlength="35" placeholder="Andika jina lako">
+  <button class="main-btn" onclick="enterSite()">GET STARTED →</button>
+  <div class="powered">POWERED BY YASSER TECH SOLUTIONS</div>
+ </div>
+</div>
+
+<!-- HEADER -->
+<header class="topbar">
+ <div class="top-inner">
+  <div class="brand">
+   <img src="https://files.catbox.moe/1b3ecf" alt="Logo">
+   <div>
+    <h2>CONNECTION <span>TZ</span></h2>
+    <small>MODERN STREAMING</small>
+   </div>
+  </div>
+  <div class="actions">
+   <button class="action" onclick="openModal('notificationModal')" aria-label="Notifications">♧<i class="notification-dot" id="notificationDot"></i></button>
+   <button class="action" onclick="openModal('accountModal')" aria-label="Account">♙</button>
+  </div>
+ </div>
+</header>
+
+<main>
+ <div class="greeting">
+  <div><p>Welcome back</p><strong id="greetingName">Guest</strong></div>
+  <div id="clock"></div>
+ </div>
+
+ <!-- FEATURED -->
+ <section class="feature">
+  <img class="feature-image" id="featureImage" src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1200" alt="Featured">
+  <div class="feature-overlay"></div>
+  <div class="feature-content">
+   <span class="feature-label">FEATURED CONTENT</span>
+   <h1 id="featureTitle">DISCOVER<br>MORE.</h1>
+   <p id="featureDescription">Gundua maudhui mapya na burudani ndani ya CONNECTION TZ.</p>
+   <div class="feature-buttons">
+    <button class="watch-btn" onclick="playFeatured()">▶ WATCH NOW</button>
+    <button class="more-btn" onclick="goToVideos()">EXPLORE</button>
+   </div>
+  </div>
+ </section>
+
+ <!-- SEARCH -->
+ <div class="search">
+  <span>⌕</span>
+  <input id="searchInput" type="search" placeholder="Search movies, videos, categories..." oninput="renderVideos()">
+ </div>
+
+ <!-- CATEGORIES -->
+ <section class="section">
+  <div class="section-title"><h2>Explore <span>Categories</span></h2></div>
+  <div class="category-row" id="categoryList">
+   <button class="cat active" onclick="selectCategory('all',this)">All</button>
+  </div>
+ </section>
+
+ <!-- TRENDING -->
+ <section class="section" id="videosSection">
+  <div class="section-title">
+   <h2>Trending <span>Now</span></h2>
+   <button onclick="clearCategory()">VIEW ALL →</button>
+  </div>
+  <div class="video-grid" id="videoGrid">
+   <div class="no-videos"><strong>Loading content...</strong> Tafadhali subiri.</div>
+  </div>
+ </section>
+
+ <!-- RECENT -->
+ <section class="section">
+  <div class="section-title"><h2>Recently <span>Added</span></h2></div>
+  <div class="video-grid" id="recentGrid">
+   <div class="no-videos">Video mpya zitaonekana hapa.</div>
+  </div>
+ </section>
+
+ <!-- PREMIUM -->
+ <section class="section">
+  <div class="premium-card">
+   <small>EXCLUSIVE EXPERIENCE</small>
+   <h2>Unlock Premium.</h2>
+   <p>Gundua eneo la Premium na taarifa kuhusu huduma maalumu za CONNECTION TZ.</p>
+   <button onclick="openModal('premiumModal')">EXPLORE PREMIUM →</button>
+  </div>
+ </section>
+</main>
+
+<footer>
+ <strong>CONNECTION TZ</strong><br>
+ Powered by YASSER TECH SOLUTIONS<br>
+ © <span id="year"></span> All Rights Reserved.
+</footer>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+ <button class="nav-item active" onclick="goHome(this)"><span>⌂</span>Home</button>
+ <button class="nav-item" onclick="goToVideos(this)"><span>⌕</span>Explore</button>
+ <button class="nav-item" onclick="openModal('premiumModal',this)"><span>✦</span>Premium</button>
+ <button class="nav-item" onclick="openModal('accountModal',this)"><span>♙</span>Profile</button>
+</nav>
+
+<!-- VIDEO PLAYER -->
+<div class="modal" id="videoModal">
+ <div class="modal-box">
+  <div class="modal-head">
+   <h3>NOW PLAYING</h3>
+   <button class="close" onclick="closeModal('videoModal')">×</button>
+  </div>
+  <video id="player" controls playsinline controlsList="nodownload">
+   Browser yako haiwezi kucheza video hii.
+  </video>
+  <h3 id="playerTitle"></h3>
+ </div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div class="modal" id="notificationModal">
+ <div class="modal-box">
+  <div class="modal-head">
+   <h3>Notifications 🔔</h3>
+   <button class="close" onclick="closeModal('notificationModal')">×</button>
+  </div>
+  <div id="notificationList"><p style="color:#89928b;font-size:12px">Hakuna taarifa kwa sasa.</p></div>
+ </div>
+</div>
+
+<!-- ACCOUNT -->
+<div class="modal" id="accountModal">
+ <div class="modal-box">
+  <div class="modal-head">
+   <h3>My Profile</h3>
+   <button class="close" onclick="closeModal('accountModal')">×</button>
+  </div>
+  <div class="account-profile">
+   <img src="https://files.catbox.moe/1b3ecf" alt="Profile">
+   <div><strong id="accountName">Guest</strong><p>CONNECTION TZ Visitor</p></div>
+  </div>
+  <button class="modal-btn" onclick="changeName()">Change Display Name</button>
+  <button class="modal-btn" onclick="closeModal('accountModal')">Close</button>
+ </div>
+</div>
+
+<!-- PREMIUM -->
+<div class="modal" id="premiumModal">
+ <div class="modal-box">
+  <div class="modal-head">
+   <h3>Premium Experience</h3>
+   <button class="close" onclick="closeModal('premiumModal')">×</button>
+  </div>
+  <p style="color:#b9c2bb;font-size:12px;line-height:1.9">
+   Premium section ya CONNECTION TZ. Taarifa za vifurushi, muda wa huduma na masharti zitawekwa hapa baada ya kuunganishwa na mfumo wa malipo.
+  </p>
+ </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* SUPABASE */
+const SUPABASE_URL="https://xqhsestljljtlldrtekq.supabase.co";
+const SUPABASE_KEY="sb_publishable_mVXDXelpL2SUhkJlC_W8kw_f8-fBm6a";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let videos=[];
+let categories=[];
+let selectedCategory="all";
+let visitor=localStorage.getItem("ctz_visitor")||"";
+let featuredVideo=null;
+
+/* WELCOME */
+function enterSite(){
+ const name=document.getElementById("visitorName").value.trim();
+ if(!name){alert("Andika jina lako kwanza.");return;}
+ visitor=name.slice(0,35);
+ localStorage.setItem("ctz_visitor",visitor);
+ showSite();
+}
+function showSite(){
+ document.getElementById("welcome").classList.add("hidden");
+ document.getElementById("greetingName").textContent=visitor||"Guest";
+ document.getElementById("accountName").textContent=visitor||"Guest";
+}
+if(visitor)showSite();
+
+/* CLOCK */
+function updateClock(){
+ const now=new Date();
+ document.getElementById("clock").textContent=
+ now.toLocaleDateString("sw-TZ",{day:"numeric",month:"short"})+" · "+
+ now.toLocaleTimeString("sw-TZ",{hour:"2-digit",minute:"2-digit"});
+}
+setInterval(updateClock,1000);
+updateClock();
+document.getElementById("year").textContent=new Date().getFullYear();
+
+/* CATEGORIES */
+async function loadCategories(){
+ const {data,error}=await db.from("categories")
+ .select("id,name").order("created_at",{ascending:false});
+ if(error){console.error(error);return;}
+ categories=data||[];
+ renderCategories();
+}
+function renderCategories(){
+ const holder=document.getElementById("categoryList");
+ holder.innerHTML="";
+ const all=document.createElement("button");
+ all.className="cat"+(selectedCategory==="all"?" active":"");
+ all.textContent="All";
+ all.onclick=()=>selectCategory("all",all);
+ holder.appendChild(all);
+ categories.forEach(cat=>{
+  const btn=document.createElement("button");
+  btn.className="cat"+(selectedCategory===cat.id?" active":"");
+  btn.textContent=cat.name;
+  btn.onclick=()=>selectCategory(cat.id,btn);
+  holder.appendChild(btn);
+ });
+}
+function selectCategory(id,button){
+ selectedCategory=id;
+ document.querySelectorAll(".cat").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ renderVideos();
+}
+function clearCategory(){
+ selectedCategory="all";
+ renderCategories();
+ renderVideos();
+}
+
+/* VIDEOS */
+async function loadVideos(){
+ const {data,error}=await db.from("videos")
+ .select("id,category_id,title,description,thumbnail_url,video_url,created_at")
+ .eq("is_published",true).eq("is_paid",false)
+ .order("created_at",{ascending:false});
+ if(error){
+  console.error("Video load error:",error.message);
+  document.getElementById("videoGrid").innerHTML=
+  '<div class="no-videos"><strong>Unable to load videos</strong>Check Supabase policies.</div>';
+  return;
+ }
+ videos=data||[];
+ featuredVideo=videos[0]||null;
+ if(featuredVideo){
+  document.getElementById("featureTitle").textContent=featuredVideo.title;
+  document.getElementById("featureDescription").textContent=featuredVideo.description||"Watch now on CONNECTION TZ.";
+  if(featuredVideo.thumbnail_url)
+   document.getElementById("featureImage").src=featuredVideo.thumbnail_url;
+ }
+ renderVideos();
+ renderRecent();
+}
+function makeCard(video){
+ const card=document.createElement("article");
+ card.className="video-card";
+ const poster=document.createElement("div");
+ poster.className="poster";
+ const img=document.createElement("img");
+ img.src=video.thumbnail_url||"https://files.catbox.moe/1b3ecf";
+ img.alt=video.title||"Video";
+ img.loading="lazy";
+ img.onerror=()=>img.src="https://files.catbox.moe/1b3ecf";
+ poster.appendChild(img);
+ const info=document.createElement("div");
+ info.className="video-info";
+ const title=document.createElement("h3");
+ title.textContent=video.title||"Untitled";
+ const sub=document.createElement("p");
+ sub.textContent="CONNECTION TZ · FREE";
+ info.append(title,sub);
+ card.append(poster,info);
+ card.onclick=()=>playVideo(video.id);
+ return card;
+}
+function renderVideos(){
+ const holder=document.getElementById("videoGrid");
+ const term=document.getElementById("searchInput").value.toLowerCase().trim();
+ const list=videos.filter(v=>{
+  const categoryMatch=selectedCategory==="all"||v.category_id===selectedCategory;
+  const textMatch=(v.title||"").toLowerCase().includes(term)||
+  (v.description||"").toLowerCase().includes(term);
+  return categoryMatch&&textMatch;
+ });
+ holder.innerHTML="";
+ if(!list.length){
+  holder.innerHTML='<div class="no-videos"><strong>No videos found</strong>Hakuna video zilizopatikana.</div>';
+  return;
+ }
+ list.forEach(v=>holder.appendChild(makeCard(v)));
+}
+function renderRecent(){
+ const holder=document.getElementById("recentGrid");
+ holder.innerHTML="";
+ if(!videos.length){
+  holder.innerHTML='<div class="no-videos">Hakuna video mpya kwa sasa.</div>';
+  return;
+ }
+ videos.slice(0,4).forEach(v=>holder.appendChild(makeCard(v)));
+}
+
+/* PLAYER */
+function playVideo(id){
+ const video=videos.find(v=>v.id===id);
+ if(!video||!video.video_url){alert("Video haina link ya kucheza.");return;}
+ const player=document.getElementById("player");
+ player.src=video.video_url;
+ document.getElementById("playerTitle").textContent=video.title;
+ openModal("videoModal");
+ player.play().catch(()=>{});
+}
+function playFeatured(){
+ if(featuredVideo)playVideo(featuredVideo.id);
+ else goToVideos();
+}
+
+/* NOTIFICATIONS */
+async function loadNotifications(){
+ const {data,error}=await db.from("notifications")
+ .select("id,title,message,created_at")
+ .eq("is_active",true).order("created_at",{ascending:false});
+ if(error){console.error(error);return;}
+ const holder=document.getElementById("notificationList");
+ holder.innerHTML="";
+ if(!data||!data.length){
+  holder.innerHTML='<p style="color:#89928b;font-size:12px">Hakuna taarifa kwa sasa.</p>';
+  document.getElementById("notificationDot").classList.add("hidden");
+  return;
+ }
+ document.getElementById("notificationDot").classList.remove("hidden");
+ data.forEach(n=>{
+  const item=document.createElement("div");
+  item.className="notice";
+  const title=document.createElement("strong");
+  title.textContent=n.title||"Notification";
+  const msg=document.createElement("p");
+  msg.textContent=n.message||"";
+  item.append(title,msg);
+  holder.appendChild(item);
+ });
+}
+
+/* ACCOUNT */
+function changeName(){
+ const name=prompt("Andika jina jipya:",visitor);
+ if(name&&name.trim()){
+  visitor=name.trim().slice(0,35);
+  localStorage.setItem("ctz_visitor",visitor);
+  showSite();
+ }
+}
+
+/* MODALS */
+function openModal(id){
+ document.getElementById(id).classList.add("show");
+}
+function closeModal(id){
+ document.getElementById(id).classList.remove("show");
+ if(id==="videoModal"){
+  const player=document.getElementById("player");
+  player.pause();player.removeAttribute("src");player.load();
+ }
+}
+document.querySelectorAll(".modal").forEach(m=>{
+ m.addEventListener("click",e=>{
+  if(e.target===m)closeModal(m.id);
+ });
+});
+
+/* NAVIGATION */
+function setNav(button){
+ document.querySelectorAll(".nav-item").forEach(b=>b.classList.remove("active"));
+ if(button)button.classList.add("active");
+}
+function goHome(button){
+ setNav(button);
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function goToVideos(button){
+ setNav(button);
+ document.getElementById("videosSection").scrollIntoView({behavior:"smooth"});
+}
+
+/* START */
+async function initialize(){
+ await Promise.all([loadCategories(),loadVideos(),loadNotifications()]);
+}
+initialize();
+</script>
+</body>
+</html>
