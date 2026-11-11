@@ -1,0 +1,689 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b0a">
+<title>CONNECTION TZ | Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+ --bg:#090b0a;--panel:#121713;--panel2:#1b241e;
+ --red:#e53945;--green:#16a36b;--text:#f5f7f5;
+ --muted:#89928b;--line:rgba(255,255,255,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+/* LOGIN */
+#loginScreen{
+ min-height:100vh;display:flex;align-items:center;justify-content:center;
+ padding:20px;background:radial-gradient(circle at 50% 15%,#35161c,transparent 45%),var(--bg);
+}
+.login-box{
+ width:100%;max-width:390px;background:var(--panel);
+ border:1px solid var(--line);border-radius:22px;padding:27px;
+}
+.login-logo{
+ width:75px;height:75px;border-radius:50%;object-fit:cover;
+ border:2px solid var(--red);padding:3px;display:block;margin:0 auto 18px;
+}
+.login-box h1{text-align:center;font-size:22px}
+.login-box h1 span{color:var(--red)}
+.login-box p{text-align:center;color:var(--muted);font-size:12px;margin:9px 0 22px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11px;color:#b9c2bb;margin-bottom:7px}
+.field input,.field textarea,.field select{
+ width:100%;padding:13px;border-radius:10px;
+ background:#0c100d;color:white;border:1px solid var(--line);outline:none;
+}
+.field textarea{min-height:85px;resize:vertical}
+.btn{
+ border:0;border-radius:10px;padding:12px 16px;
+ color:white;background:var(--red);font-weight:800;font-size:12px;
+}
+.btn.green{background:var(--green)}
+.btn.dark{background:var(--panel2);border:1px solid var(--line)}
+.btn.full{width:100%}
+.error{color:#ff737c;font-size:12px;margin-top:12px;text-align:center}
+
+/* DASHBOARD */
+#dashboard{display:none;min-height:100vh}
+.sidebar{
+ width:245px;position:fixed;left:0;top:0;bottom:0;
+ background:#101511;border-right:1px solid var(--line);
+ padding:22px 15px;z-index:30;overflow:auto;
+}
+.side-brand{display:flex;align-items:center;gap:10px;padding:0 5px 23px}
+.side-brand img{width:42px;height:42px;border-radius:50%;object-fit:cover;border:1px solid var(--red)}
+.side-brand strong{font-size:15px}
+.side-brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:1px}
+.nav-label{color:#69736c;font-size:9px;letter-spacing:2px;padding:15px 10px 8px}
+.nav-btn{
+ width:100%;border:0;background:transparent;color:#aeb7b0;
+ padding:12px 11px;border-radius:10px;text-align:left;
+ font-size:12px;margin:2px 0;display:flex;gap:11px;align-items:center;
+}
+.nav-btn.active,.nav-btn:hover{background:#29201f;color:white}
+.nav-btn.active{border-left:3px solid var(--red)}
+.side-bottom{margin-top:25px;border-top:1px solid var(--line);padding-top:15px}
+.main{margin-left:245px;padding:25px;max-width:1500px}
+.topbar{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:12px;margin-bottom:25px;
+}
+.topbar h1{font-size:22px}
+.topbar p{font-size:11px;color:var(--muted);margin-top:5px}
+.admin-chip{font-size:10px;color:var(--green);background:#16a36b18;padding:9px 12px;border-radius:20px}
+.page{display:none}
+.page.active{display:block}
+.stats{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;
+}
+.stat{
+ padding:19px;background:var(--panel);
+ border:1px solid var(--line);border-radius:15px;
+}
+.stat small{color:var(--muted);font-size:11px}
+.stat h2{font-size:27px;margin-top:10px}
+.stat span{color:var(--green);font-size:10px}
+.panel{
+ background:var(--panel);border:1px solid var(--line);
+ border-radius:15px;padding:18px;margin-top:18px;
+}
+.panel-head{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:12px;flex-wrap:wrap;margin-bottom:16px;
+}
+.panel-head h2{font-size:15px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);font-size:11px}
+th{color:var(--muted);font-weight:600}
+td{color:#e3e8e3}
+td img{width:48px;height:38px;object-fit:cover;border-radius:6px}
+.actions-cell{display:flex;gap:6px;flex-wrap:wrap}
+.small-btn{padding:7px 9px;font-size:10px;border:0;border-radius:7px;color:white;background:var(--panel2)}
+.small-btn.red{background:#812b32}
+.small-btn.green{background:#126c49}
+.status{padding:5px 8px;border-radius:20px;font-size:9px;background:#ffffff12}
+.status.approved{color:#54d99e;background:#16a36b20}
+.status.pending{color:#f1c66b;background:#b8872020}
+.status.rejected{color:#ff7b82;background:#e5394520}
+.empty{color:var(--muted);text-align:center;padding:25px;font-size:12px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .field{margin:0}
+.form-actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}
+.notice{padding:13px 0;border-bottom:1px solid var(--line)}
+.notice strong{font-size:12px}
+.notice p{font-size:11px;color:var(--muted);margin-top:5px}
+.mobile-menu{display:none}
+#toast{
+ position:fixed;bottom:20px;right:20px;z-index:200;
+ background:#1b241e;border:1px solid var(--line);
+ padding:13px 17px;border-radius:10px;font-size:12px;
+ display:none;max-width:85%;
+}
+@media(max-width:900px){
+ .sidebar{width:65px;padding:18px 8px}
+ .side-brand{justify-content:center;padding:0 0 20px}
+ .side-brand div,.nav-label,.nav-btn .nav-text,.side-bottom .nav-text{display:none}
+ .nav-btn{justify-content:center;font-size:17px;padding:13px 5px}
+ .main{margin-left:65px;padding:18px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:550px){
+ .main{padding:14px}
+ .topbar h1{font-size:19px}
+ .stats{gap:9px}
+ .stat{padding:14px}
+ .stat h2{font-size:22px}
+ .form-grid{grid-template-columns:1fr}
+ .admin-chip{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section id="loginScreen">
+ <div class="login-box">
+  <img class="login-logo" src="https://files.catbox.moe/1b3ecf" alt="Logo">
+  <h1>CONNECTION <span>TZ</span></h1>
+  <p>ADMIN CONTROL CENTER</p>
+
+  <form id="loginForm">
+   <div class="field">
+    <label>ADMIN EMAIL</label>
+    <input id="email" type="email" required placeholder="Admin email">
+   </div>
+   <div class="field">
+    <label>PASSWORD</label>
+    <input id="password" type="password" required placeholder="Password">
+   </div>
+   <button class="btn full" id="loginButton">LOGIN TO DASHBOARD →</button>
+  </form>
+  <div class="error" id="loginError"></div>
+ </div>
+</section>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+ <aside class="sidebar">
+  <div class="side-brand">
+   <img src="https://files.catbox.moe/1b3ecf" alt="Logo">
+   <div><strong>CONNECTION TZ</strong><small>ADMIN PANEL</small></div>
+  </div>
+
+  <div class="nav-label">MAIN MENU</div>
+  <button class="nav-btn active" data-page="overview"><span>▦</span><span class="nav-text">Overview</span></button>
+  <button class="nav-btn" data-page="videos"><span>▶</span><span class="nav-text">Videos</span></button>
+  <button class="nav-btn" data-page="categories"><span>▤</span><span class="nav-text">Categories</span></button>
+  <button class="nav-btn" data-page="notifications"><span>♧</span><span class="nav-text">Notifications</span></button>
+
+  <div class="nav-label">MANAGEMENT</div>
+  <button class="nav-btn" data-page="users"><span>♙</span><span class="nav-text">Users</span></button>
+  <button class="nav-btn" data-page="payments"><span>＄</span><span class="nav-text">Payments</span></button>
+
+  <div class="side-bottom">
+   <button class="nav-btn" id="logoutButton"><span>⇥</span><span class="nav-text">Logout</span></button>
+  </div>
+ </aside>
+
+ <main class="main">
+  <div class="topbar">
+   <div>
+    <h1 id="pageTitle">Overview</h1>
+    <p>Welcome to your CONNECTION TZ control center.</p>
+   </div>
+   <span class="admin-chip">● ADMIN ACCESS</span>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section class="page active" id="page-overview">
+   <div class="stats">
+    <div class="stat"><small>Total Videos</small><h2 id="statVideos">0</h2><span>Published content</span></div>
+    <div class="stat"><small>Categories</small><h2 id="statCategories">0</h2><span>Content sections</span></div>
+    <div class="stat"><small>Users</small><h2 id="statUsers">0</h2><span>Registered profiles</span></div>
+    <div class="stat"><small>Payments</small><h2 id="statPayments">0</h2><span>Payment records</span></div>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h2>Recent Videos</h2><button class="btn dark" onclick="showPage('videos')">Manage Videos</button></div>
+    <div class="table-wrap"><table>
+     <thead><tr><th>VIDEO</th><th>TITLE</th><th>TYPE</th><th>STATUS</th></tr></thead>
+     <tbody id="recentVideos"></tbody>
+    </table></div>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h2>Recent Payments</h2><button class="btn dark" onclick="showPage('payments')">View All</button></div>
+    <div class="table-wrap"><table>
+     <thead><tr><th>AMOUNT</th><th>TRANSACTION</th><th>STATUS</th><th>DATE</th></tr></thead>
+     <tbody id="recentPayments"></tbody>
+    </table></div>
+   </div>
+  </section>
+
+  <!-- VIDEOS -->
+  <section class="page" id="page-videos">
+   <div class="panel">
+    <div class="panel-head">
+     <h2>Add New Video</h2>
+     <button class="btn dark" onclick="loadVideos()">↻ Refresh</button>
+    </div>
+    <form id="videoForm">
+     <input type="hidden" id="videoId">
+     <div class="form-grid">
+      <div class="field"><label>VIDEO TITLE</label><input id="videoTitle" required placeholder="Video title"></div>
+      <div class="field"><label>CATEGORY</label><select id="videoCategory" required></select></div>
+      <div class="field"><label>THUMBNAIL URL</label><input id="thumbnailUrl" type="url" placeholder="https://..."></div>
+      <div class="field"><label>VIDEO URL</label><input id="videoUrl" type="url" required placeholder="https://..."></div>
+      <div class="field"><label>VIDEO TYPE</label>
+       <select id="videoPaid"><option value="false">Free</option><option value="true">Paid</option></select>
+      </div>
+      <div class="field"><label>PRICE (TZS)</label><input id="videoPrice" type="number" min="0" value="0"></div>
+     </div>
+     <div class="field" style="margin-top:12px"><label>DESCRIPTION</label><textarea id="videoDescription" placeholder="Video description"></textarea></div>
+     <div class="field" style="margin-top:12px">
+      <label><input id="videoPublished" type="checkbox" checked style="width:auto"> Publish video</label>
+     </div>
+     <div class="form-actions">
+      <button class="btn" type="submit" id="saveVideoButton">SAVE VIDEO</button>
+      <button class="btn dark" type="button" onclick="resetVideoForm()">CLEAR</button>
+     </div>
+    </form>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h2>All Videos</h2></div>
+    <div class="table-wrap"><table>
+     <thead><tr><th>IMAGE</th><th>TITLE</th><th>TYPE</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+     <tbody id="videosTable"></tbody>
+    </table></div>
+   </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="page" id="page-categories">
+   <div class="panel">
+    <div class="panel-head"><h2>Add Category</h2></div>
+    <form id="categoryForm">
+     <div class="form-grid">
+      <div class="field"><label>CATEGORY NAME</label><input id="categoryName" required placeholder="Category name"></div>
+      <div class="field"><label>IMAGE URL (OPTIONAL)</label><input id="categoryImage" type="url" placeholder="https://..."></div>
+     </div>
+     <div class="field" style="margin-top:12px"><label>DESCRIPTION</label><textarea id="categoryDescription" placeholder="Description"></textarea></div>
+     <div class="form-actions"><button class="btn">ADD CATEGORY</button></div>
+    </form>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h2>All Categories</h2></div>
+    <div class="table-wrap"><table>
+     <thead><tr><th>NAME</th><th>DESCRIPTION</th><th>ACTIONS</th></tr></thead>
+     <tbody id="categoriesTable"></tbody>
+    </table></div>
+   </div>
+  </section>
+
+  <!-- NOTIFICATIONS -->
+  <section class="page" id="page-notifications">
+   <div class="panel">
+    <div class="panel-head"><h2>Create Notification</h2></div>
+    <form id="notificationForm">
+     <div class="field"><label>TITLE</label><input id="notificationTitle" required placeholder="Notification title"></div>
+     <div class="field"><label>MESSAGE</label><textarea id="notificationMessage" required placeholder="Write your announcement"></textarea></div>
+     <div class="field"><label><input id="notificationActive" type="checkbox" checked style="width:auto"> Make active</label></div>
+     <button class="btn">PUBLISH NOTIFICATION</button>
+    </form>
+   </div>
+   <div class="panel">
+    <div class="panel-head"><h2>All Notifications</h2></div>
+    <div id="notificationsList"></div>
+   </div>
+  </section>
+
+  <!-- USERS -->
+  <section class="page" id="page-users">
+   <div class="panel">
+    <div class="panel-head"><h2>Registered Users</h2><button class="btn dark" onclick="loadUsers()">↻ Refresh</button></div>
+    <div class="table-wrap"><table>
+     <thead><tr><th>NAME</th><th>USER ID</th><th>ROLE</th><th>JOINED</th></tr></thead>
+     <tbody id="usersTable"></tbody>
+    </table></div>
+   </div>
+  </section>
+
+  <!-- PAYMENTS -->
+  <section class="page" id="page-payments">
+   <div class="panel">
+    <div class="panel-head"><h2>Payment Records</h2><button class="btn dark" onclick="loadPayments()">↻ Refresh</button></div>
+    <p style="font-size:11px;color:#89928b;line-height:1.7;margin-bottom:15px">
+     Hapa unaweza kukagua na kubadilisha status ya rekodi. Kubadilisha status pekee hakuthibitishi malipo wala kutoa Premium access.
+    </p>
+    <div class="table-wrap"><table>
+     <thead><tr><th>AMOUNT</th><th>TRANSACTION CODE</th><th>USER</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+     <tbody id="paymentsTable"></tbody>
+    </table></div>
+   </div>
+  </section>
+ </main>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://xqhsestljljtlldrtekq.supabase.co";
+const SUPABASE_KEY="sb_publishable_mVXDXelpL2SUhkJlC_W8kw_f8-fBm6a";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let currentUser=null;
+let allVideos=[];
+let allCategories=[];
+
+const $=id=>document.getElementById(id);
+
+function toast(message){
+ const el=$("toast");
+ el.textContent=message;
+ el.style.display="block";
+ setTimeout(()=>el.style.display="none",3000);
+}
+function esc(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+function dateText(value){
+ return value?new Date(value).toLocaleDateString("sw-TZ"):"—";
+}
+function money(value){
+ return Number(value||0).toLocaleString("en-US")+" TZS";
+}
+function statusBadge(status){
+ const s=String(status||"pending").toLowerCase();
+ return `<span class="status ${esc(s)}">${esc(s.toUpperCase())}</span>`;
+}
+
+/* AUTHENTICATION */
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ $("loginError").textContent="";
+ $("loginButton").disabled=true;
+ $("loginButton").textContent="CHECKING...";
+
+ const {data,error}=await db.auth.signInWithPassword({
+  email:$("email").value.trim(),
+  password:$("password").value
+ });
+
+ if(error){
+  $("loginError").textContent=error.message;
+  $("loginButton").disabled=false;
+  $("loginButton").textContent="LOGIN TO DASHBOARD →";
+  return;
+ }
+ await verifyAdmin(data.user);
+});
+
+async function verifyAdmin(user){
+ if(!user){
+  showLogin();
+  return;
+ }
+ const {data,error}=await db.from("profiles")
+  .select("id,full_name,role")
+  .eq("id",user.id).maybeSingle();
+
+ if(error||!data||data.role!=="admin"){
+  await db.auth.signOut();
+  $("loginError").textContent="Akaunti hii haina ruhusa ya Admin.";
+  showLogin();
+  return;
+ }
+
+ currentUser=user;
+ showDashboard();
+ await refreshAll();
+}
+function showLogin(){
+ $("dashboard").style.display="none";
+ $("loginScreen").style.display="flex";
+}
+function showDashboard(){
+ $("loginScreen").style.display="none";
+ $("dashboard").style.display="block";
+}
+$("logoutButton").addEventListener("click",async()=>{
+ await db.auth.signOut();
+ currentUser=null;
+ showLogin();
+ toast("Umetoka kwenye Admin Dashboard.");
+});
+
+/* NAVIGATION */
+document.querySelectorAll(".nav-btn[data-page]").forEach(button=>{
+ button.addEventListener("click",()=>showPage(button.dataset.page));
+});
+function showPage(name){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.querySelectorAll(".nav-btn[data-page]").forEach(b=>b.classList.remove("active"));
+ $("page-"+name).classList.add("active");
+ document.querySelector(`[data-page="${name}"]`).classList.add("active");
+ const titles={
+  overview:"Overview",videos:"Videos",categories:"Categories",
+  notifications:"Notifications",users:"Users",payments:"Payments"
+ };
+ $("pageTitle").textContent=titles[name]||"Dashboard";
+ if(name==="users")loadUsers();
+ if(name==="payments")loadPayments();
+ if(name==="notifications")loadNotifications();
+ if(name==="videos")loadVideos();
+ if(name==="categories")loadCategories();
+}
+
+/* OVERVIEW */
+async function refreshAll(){
+ await Promise.all([
+  loadOverview(),loadCategories(),loadVideos(),
+  loadPayments(),loadNotifications()
+ ]);
+}
+async function loadOverview(){
+ const tables=["videos","categories","profiles","payment_records"];
+ const ids=["statVideos","statCategories","statUsers","statPayments"];
+ for(let i=0;i<tables.length;i++){
+  const {count,error}=await db.from(tables[i]).select("*",{count:"exact",head:true});
+  if(!error)$(ids[i]).textContent=count??0;
+ }
+}
+
+/* CATEGORIES */
+async function loadCategories(){
+ const {data,error}=await db.from("categories")
+  .select("id,name,description,image_url,created_at")
+  .order("created_at",{ascending:false});
+ if(error){toast("Categories: "+error.message);return;}
+ allCategories=data||[];
+ $("categoriesTable").innerHTML=allCategories.length?allCategories.map(c=>`
+  <tr>
+   <td>${esc(c.name)}</td>
+   <td>${esc(c.description||"—")}</td>
+   <td><div class="actions-cell">
+    <button class="small-btn red" onclick="deleteCategory('${c.id}')">DELETE</button>
+   </div></td>
+  </tr>`).join(""):'<tr><td colspan="3" class="empty">No categories found.</td></tr>';
+
+ $("videoCategory").innerHTML=allCategories.map(c=>
+  `<option value="${c.id}">${esc(c.name)}</option>`
+ ).join("");
+}
+$("categoryForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const payload={
+  name:$("categoryName").value.trim(),
+  description:$("categoryDescription").value.trim(),
+  image_url:$("categoryImage").value.trim()||null
+ };
+ const {error}=await db.from("categories").insert(payload);
+ if(error){toast(error.message);return;}
+ e.target.reset();
+ toast("Category imeongezwa.");
+ await loadCategories();
+ await loadOverview();
+});
+async function deleteCategory(id){
+ if(!confirm("Una uhakika unataka kufuta category hii?"))return;
+ const {error}=await db.from("categories").delete().eq("id",id);
+ if(error){toast(error.message);return;}
+ toast("Category imefutwa.");
+ await loadCategories();await loadOverview();
+}
+
+/* VIDEOS */
+async function loadVideos(){
+ const {data,error}=await db.from("videos")
+  .select("id,category_id,title,description,thumbnail_url,video_url,is_paid,price,is_published,created_at")
+  .order("created_at",{ascending:false});
+ if(error){toast("Videos: "+error.message);return;}
+ allVideos=data||[];
+
+ const rows=allVideos.map(v=>`
+  <tr>
+   <td><img src="${esc(v.thumbnail_url||"https://files.catbox.moe/1b3ecf")}" alt=""></td>
+   <td>${esc(v.title)}</td>
+   <td>${v.is_paid?"PAID":"FREE"}</td>
+   <td>${v.is_published?'<span class="status approved">PUBLISHED</span>':'<span class="status pending">DRAFT</span>'}</td>
+   <td><div class="actions-cell">
+    <button class="small-btn" onclick="editVideo('${v.id}')">EDIT</button>
+    <button class="small-btn red" onclick="deleteVideo('${v.id}')">DELETE</button>
+   </div></td>
+  </tr>`).join("");
+
+ $("videosTable").innerHTML=rows||'<tr><td colspan="5" class="empty">No videos found.</td></tr>';
+
+ $("recentVideos").innerHTML=allVideos.slice(0,5).map(v=>`
+  <tr><td><img src="${esc(v.thumbnail_url||"https://files.catbox.moe/1b3ecf")}" alt=""></td>
+  <td>${esc(v.title)}</td><td>${v.is_paid?"PAID":"FREE"}</td>
+  <td>${v.is_published?"PUBLISHED":"DRAFT"}</td></tr>
+ `).join("")||'<tr><td colspan="4" class="empty">No videos yet.</td></tr>';
+
+ $("statVideos").textContent=allVideos.length;
+}
+function resetVideoForm(){
+ $("videoForm").reset();
+ $("videoId").value="";
+ $("videoPublished").checked=true;
+ $("saveVideoButton").textContent="SAVE VIDEO";
+}
+function editVideo(id){
+ const v=allVideos.find(x=>x.id===id);
+ if(!v)return;
+ $("videoId").value=v.id;
+ $("videoTitle").value=v.title||"";
+ $("videoCategory").value=v.category_id||"";
+ $("thumbnailUrl").value=v.thumbnail_url||"";
+ $("videoUrl").value=v.video_url||"";
+ $("videoDescription").value=v.description||"";
+ $("videoPaid").value=String(!!v.is_paid);
+ $("videoPrice").value=v.price||0;
+ $("videoPublished").checked=!!v.is_published;
+ $("saveVideoButton").textContent="UPDATE VIDEO";
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+$("videoForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const id=$("videoId").value;
+ const payload={
+  title:$("videoTitle").value.trim(),
+  category_id:$("videoCategory").value||null,
+  thumbnail_url:$("thumbnailUrl").value.trim()||null,
+  video_url:$("videoUrl").value.trim(),
+  description:$("videoDescription").value.trim(),
+  is_paid:$("videoPaid").value==="true",
+  price:Number($("videoPrice").value||0),
+  is_published:$("videoPublished").checked
+ };
+ if(payload.is_paid&&payload.price<=0){
+  toast("Weka bei sahihi ya video ya kulipia.");
+  return;
+ }
+ const result=id
+  ?await db.from("videos").update(payload).eq("id",id)
+  :await db.from("videos").insert(payload);
+
+ if(result.error){toast(result.error.message);return;}
+ toast(id?"Video imesasishwa.":"Video imeongezwa.");
+ resetVideoForm();
+ await loadVideos();await loadOverview();
+});
+async function deleteVideo(id){
+ if(!confirm("Una uhakika unataka kufuta video hii?"))return;
+ const {error}=await db.from("videos").delete().eq("id",id);
+ if(error){toast(error.message);return;}
+ toast("Video imefutwa.");
+ await loadVideos();await loadOverview();
+}
+
+/* NOTIFICATIONS */
+async function loadNotifications(){
+ const {data,error}=await db.from("notifications")
+  .select("id,title,message,is_active,created_at")
+  .order("created_at",{ascending:false});
+ if(error){toast(error.message);return;}
+ $("notificationsList").innerHTML=(data||[]).map(n=>`
+  <div class="notice">
+   <strong>${esc(n.title)}</strong>
+   <p>${esc(n.message)}</p>
+   <p>${n.is_active?"ACTIVE":"INACTIVE"} · ${dateText(n.created_at)}</p>
+   <div class="actions-cell" style="margin-top:9px">
+    <button class="small-btn" onclick="toggleNotification('${n.id}',${!n.is_active})">${n.is_active?"DEACTIVATE":"ACTIVATE"}</button>
+    <button class="small-btn red" onclick="deleteNotification('${n.id}')">DELETE</button>
+   </div>
+  </div>`).join("")||'<div class="empty">No notifications found.</div>';
+}
+$("notificationForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const payload={
+  title:$("notificationTitle").value.trim(),
+  message:$("notificationMessage").value.trim(),
+  is_active:$("notificationActive").checked
+ };
+ const {error}=await db.from("notifications").insert(payload);
+ if(error){toast(error.message);return;}
+ e.target.reset();$("notificationActive").checked=true;
+ toast("Notification imechapishwa.");
+ await loadNotifications();
+});
+async function toggleNotification(id,active){
+ const {error}=await db.from("notifications").update({is_active:active}).eq("id",id);
+ if(error){toast(error.message);return;}
+ toast("Notification updated.");loadNotifications();
+}
+async function deleteNotification(id){
+ if(!confirm("Futa notification hii?"))return;
+ const {error}=await db.from("notifications").delete().eq("id",id);
+ if(error){toast(error.message);return;}
+ toast("Notification imefutwa.");loadNotifications();
+}
+
+/* USERS */
+async function loadUsers(){
+ const {data,error}=await db.from("profiles")
+  .select("id,full_name,role,created_at")
+  .order("created_at",{ascending:false});
+ if(error){toast("Users: "+error.message);return;}
+ $("usersTable").innerHTML=(data||[]).map(u=>`
+  <tr><td>${esc(u.full_name||"User")}</td>
+  <td>${esc(u.id)}</td><td>${esc(u.role)}</td>
+  <td>${dateText(u.created_at)}</td></tr>
+ `).join("")||'<tr><td colspan="4" class="empty">No users found.</td></tr>';
+ $("statUsers").textContent=(data||[]).length;
+}
+
+/* PAYMENTS */
+async function loadPayments(){
+ const {data,error}=await db.from("payment_records")
+  .select("id,user_id,amount,transaction_code,status,created_at")
+  .order("created_at",{ascending:false});
+ if(error){toast("Payments: "+error.message);return;}
+ const rows=(data||[]).map(p=>`
+  <tr>
+   <td>${money(p.amount)}</td>
+   <td>${esc(p.transaction_code||"—")}</td>
+   <td>${esc(p.user_id||"—")}</td>
+   <td>${statusBadge(p.status)}</td>
+   <td><div class="actions-cell">
+    <button class="small-btn green" onclick="setPaymentStatus('${p.id}','approved')">APPROVE</button>
+    <button class="small-btn red" onclick="setPaymentStatus('${p.id}','rejected')">REJECT</button>
+   </div></td>
+  </tr>`).join("");
+ $("paymentsTable").innerHTML=rows||'<tr><td colspan="5" class="empty">No payment records.</td></tr>';
+ $("recentPayments").innerHTML=(data||[]).slice(0,5).map(p=>`
+  <tr><td>${money(p.amount)}</td><td>${esc(p.transaction_code||"—")}</td>
+  <td>${statusBadge(p.status)}</td><td>${dateText(p.created_at)}</td></tr>
+ `).join("")||'<tr><td colspan="4" class="empty">No payments.</td></tr>';
+ $("statPayments").textContent=(data||[]).length;
+}
+async function setPaymentStatus(id,status){
+ if(!confirm("Badilisha payment status kuwa "+status.toUpperCase()+"?"))return;
+ const {error}=await db.from("payment_records").update({status}).eq("id",id);
+ if(error){toast(error.message);return;}
+ toast("Payment status updated.");
+ await loadPayments();await loadOverview();
+}
+
+/* START */
+async function start(){
+ const {data,error}=await db.auth.getSession();
+ if(error||!data.session){showLogin();return;}
+ await verifyAdmin(data.session.user);
+}
+start();
+</script>
+</body>
+</html>
